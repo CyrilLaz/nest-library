@@ -9,15 +9,19 @@
 
 Library Service based on [Nest](https://github.com/nestjs/nest) framework TypeScript starter repository.
 
-## Routers
+## Routers CRUD
 
-- `GET /books`
+```http
+GET /books
 
-- `GET /books/[id]`
+GET /books/[id]
 
-- `POST /books`
+POST /books
 
-- `PUT /books/[id]`
+PUT /books/[id]
+
+DELETE /books/[id]
+```
 
 ## Installation
 

@@ -7,7 +7,7 @@
 
 ## Description
 
-Library Service based on [Nest](https://github.com/nestjs/nest) framework TypeScript starter repository.
+Library Service based on [Nest](https://github.com/nestjs/nest) framework TypeScript starter repository. Using `mongoose`.
 
 ## Routers CRUD
 

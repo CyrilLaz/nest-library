@@ -1,27 +1,31 @@
 import { Injectable } from "@nestjs/common";
-import { IBook, IBooksServices, TBookStore } from "./books.interfaces";
-import { randomUUID } from "crypto";
+import { Model } from "mongoose";
+import { InjectModel } from "@nestjs/mongoose";
+import { Book, TBookDocument } from "./schemas/book.schema";
+import { CreateBookDto } from "./interfaces/dto/create-book.dto";
+import { UpdateBookDto } from "./interfaces/dto/update-book.dto";
 
 @Injectable()
-export class BooksService implements IBooksServices {
-  private readonly store: TBookStore = new Map();
+export class BooksService {
+  constructor(@InjectModel(Book.name) private BookModel: Model<Book>) {}
 
-  create(book: IBook): IBook {
-    const id = randomUUID();
-    this.store.set(id, { id, ...book });
-    return this.getById(id);
+  create(data: CreateBookDto): Promise<TBookDocument> {
+    const book = new this.BookModel(data);
+    return book.save();
   }
-  getAll(): IBook[] {
-    return Array.from(this.store, ([_, value]) => ({ ...value }));
+  getAll(): Promise<TBookDocument[]> {
+    return this.BookModel.find().exec();
   }
-  getById(id: string): IBook {
-    return this.store.get(id);
+  update(id: string, data: UpdateBookDto): Promise<TBookDocument> {
+    return this.BookModel.findByIdAndUpdate(id, data, {
+      returnDocument: "after",
+    });
   }
-  update(id: string, payload: IBook): IBook {
-    this.store.set(id, { ...this.store.get(id), ...payload });
-    return this.store.get(id);
+  getById(id: string): Promise<TBookDocument> {
+    return this.BookModel.findById(id);
   }
-  delete(id: string): void {
-    this.store.delete(id);
+  delete(id: string): Promise<void> {
+    return this.BookModel.findByIdAndDelete(id);
   }
 }
+

@@ -1,5 +1,5 @@
-import { CallHandler, ExecutionContext, NestInterceptor } from "@nestjs/common";
-import { catchError, map, Observable, of } from "rxjs";
+import { CallHandler, ExecutionContext, InternalServerErrorException, NestInterceptor } from "@nestjs/common";
+import { catchError, map, Observable } from "rxjs";
 
 export class AppRespondInterceptor implements NestInterceptor {
   intercept(
@@ -8,7 +8,6 @@ export class AppRespondInterceptor implements NestInterceptor {
   ): Observable<any> | Promise<Observable<any>> {
     return next.handle().pipe(
       map((data) => ({ status: "success", data })),
-      catchError((error) => of({ status: "fail", data: error }))
     );
   }
 }

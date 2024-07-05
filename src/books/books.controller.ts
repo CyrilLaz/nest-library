@@ -11,9 +11,9 @@ import {
 import { BooksService } from "./books.service";
 import { CreateBookDto } from "./interfaces/dto/create-book.dto";
 import { TBookDocument } from "./schemas/book.schema";
-import { TParamId } from "./interfaces/param-id.type";
 import { UpdateBookDto } from "./interfaces/dto/update-book.dto";
 import { BooksInterceptor } from "./books.interceptor";
+import { IdValidationPipe } from "./id.validation.pipe";
 
 @UseInterceptors(BooksInterceptor)
 @Controller("books")
@@ -30,20 +30,20 @@ export class BooksController {
   }
 
   @Get(":id")
-  findById(@Param("id") id: string): Promise<TBookDocument> {
+  findById(@Param("id", IdValidationPipe) id: string): Promise<TBookDocument> {
     return this.bookService.getById(id);
   }
 
   @Put(":id")
   update(
-    @Param() { id }: TParamId,
+    @Param("id", IdValidationPipe) id: string,
     @Body() body: UpdateBookDto
   ): Promise<TBookDocument> {
     return this.bookService.update(id, body);
   }
 
   @Delete(":id")
-  async remove(@Param("id") id: string) {
+  async remove(@Param("id", IdValidationPipe) id: string) {
     await this.bookService.delete(id);
     return "ok";
   }

@@ -6,13 +6,16 @@ import {
   Param,
   Post,
   Put,
+  UseInterceptors,
 } from "@nestjs/common";
 import { BooksService } from "./books.service";
 import { CreateBookDto } from "./interfaces/dto/create-book.dto";
 import { TBookDocument } from "./schemas/book.schema";
 import { TParamId } from "./interfaces/param-id.type";
 import { UpdateBookDto } from "./interfaces/dto/update-book.dto";
+import { BooksInterceptor } from "./books.interceptor";
 
+@UseInterceptors(BooksInterceptor)
 @Controller("books")
 export class BooksController {
   constructor(private readonly bookService: BooksService) {}
@@ -28,8 +31,6 @@ export class BooksController {
 
   @Get(":id")
   findById(@Param("id") id: string): Promise<TBookDocument> {
-    console.log(id);
-    
     return this.bookService.getById(id);
   }
 
@@ -49,4 +50,3 @@ export class BooksController {
 
   //   https://docs-nestjs.netlify.app/controllers#full-resource-sample
 }
-

@@ -3,7 +3,6 @@ import {
   CallHandler,
   ExecutionContext,
   Injectable,
-  InternalServerErrorException,
   NestInterceptor,
 } from "@nestjs/common";
 import { catchError, map, Observable } from "rxjs";
@@ -17,7 +16,7 @@ export class BooksInterceptor implements NestInterceptor {
         if (error instanceof MongooseError.CastError) {
           throw new BadRequestException(error);
         }
-        throw new InternalServerErrorException(error);
+        throw error;
       })
     );
   }

@@ -9,9 +9,9 @@ import {
   UseInterceptors,
 } from "@nestjs/common";
 import { BooksService } from "./books.service";
-import { CreateBookDto } from "./interfaces/dto/create-book.dto";
+import { CreateBookDto } from "./dto/create-book.dto";
 import { TBookDocument } from "./schemas/book.schema";
-import { UpdateBookDto } from "./interfaces/dto/update-book.dto";
+import { UpdateBookDto } from "./dto/update-book.dto";
 import { BooksInterceptor } from "./books.interceptor";
 import { IdValidationPipe } from "./id.validation.pipe";
 
@@ -47,6 +47,4 @@ export class BooksController {
     await this.bookService.delete(id);
     return "ok";
   }
-
-  //   https://docs-nestjs.netlify.app/controllers#full-resource-sample
 }

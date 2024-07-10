@@ -1,21 +1,20 @@
 import { SchemaFactory, Schema, Prop } from "@nestjs/mongoose";
-import { HydratedDocument, Model, ObjectId } from "mongoose";
-import { from, map, Observable, of } from "rxjs";
+import { HydratedDocument, Model } from "mongoose";
 import { RegisterDto } from "../dto/register.dto";
 
 export type TUserDocument = HydratedDocument<User> & TUserMethods;
 export type TUserModel = Model<User> & TUserStatics;
 type TUserStatics = {
-  getById: (this: TUserModel, id: ObjectId) => Observable<TUserDocument>;
-  getByEmail: (this: TUserModel, email: string) => Observable<TUserDocument>;
-  createNew: (this: TUserModel, data: RegisterDto) => Observable<TUserDocument>;
+  getById: (this: TUserModel, id: string) => Promise<TUserDocument | null>;
+  getByEmail: (
+    this: TUserModel,
+    email: string
+  ) => Promise<TUserDocument | null>;
+  createNew: (this: TUserModel, data: RegisterDto) => Promise<TUserDocument>;
 };
 
 type TUserMethods = {
-  validateByPassword: (
-    this: TUserDocument,
-    password: string
-  ) => Observable<boolean>;
+  validateByPassword: (this: TUserDocument, password: string) => boolean;
 };
 
 @Schema({ versionKey: false })
@@ -37,21 +36,20 @@ const UserSchema = SchemaFactory.createForClass(User);
 
 UserSchema.statics = {
   getByEmail(email) {
-    return from(this.findOne({ email })).pipe(
-      map((user) => user as TUserDocument)
-    );
+    return this.findOne({ email });
   },
   getById(id) {
-    return from(this.findById(id)).pipe(map((user) => user as TUserDocument));
+    return this.findById(id);
   },
-  createNew(data) {
-    return from(this.create(data)).pipe(map((user) => user as TUserDocument));
+  async createNew(data) {
+    const user = new this(data);
+    return (await user.save()) as TUserDocument;
   },
 } satisfies TUserStatics;
 
 UserSchema.methods = {
   validateByPassword(password) {
-    return of(this.password === password);
+    return this.password === password;
   },
 } satisfies TUserMethods;
 

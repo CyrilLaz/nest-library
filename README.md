@@ -7,11 +7,19 @@
 
 ## Description
 
+
 Library Service based on [Nest](https://github.com/nestjs/nest) framework TypeScript starter repository. Using `mongoose`.
 
 ## Routers CRUD
 
+
 ```http
+POST /api/users/signup
+
+POST /api/users/signin
+
+GET /api/users/login - получить данные user, на основе jwt-токена в headers
+
 GET /books
 
 GET /books/[id]

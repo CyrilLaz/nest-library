@@ -1,4 +1,4 @@
-import { IsString, IsDefined, IsEmail, MaxLength } from "class-validator";
+import { IsString, IsDefined, IsEmail, MinLength } from "class-validator";
 
 export class LoginDto {
   @IsEmail()
@@ -7,6 +7,6 @@ export class LoginDto {
 
   @IsString()
   @IsDefined()
-  @MaxLength(3)
+  @MinLength(3)
   password: string;
 }

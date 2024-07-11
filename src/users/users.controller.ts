@@ -2,9 +2,12 @@ import {
   Body,
   ConflictException,
   Controller,
+  Get,
   Inject,
   Post,
+  Request,
   UnauthorizedException,
+  UseGuards,
   forwardRef,
 } from "@nestjs/common";
 import { UsersService } from "./users.service";
@@ -12,6 +15,8 @@ import { RegisterDto } from "./dto/register.dto";
 import { LoginDto } from "./dto/login.dto";
 import { catchError, from, map, of, switchMap, tap } from "rxjs";
 import { AuthService } from "src/auth/auth.service";
+import { JwtAuthGuard } from "src/auth/jwt.auth.guard";
+import { IJwtPayload } from "src/auth/auth.interface";
 
 @Controller("api/users")
 export class UsersController {
@@ -34,7 +39,7 @@ export class UsersController {
   }
 
   @Post("signin")
-  login(@Body() data: LoginDto) {
+  signin(@Body() data: LoginDto) {
     return from(this.userService.findByEmail(data.email)).pipe(
       map((user) => {
         if (!user || !user.validateByPassword(data.password)) {
@@ -45,5 +50,11 @@ export class UsersController {
       switchMap((user) => of(this.authService.createToken(user))),
       map((token) => ({ token }))
     );
+  }
+
+  @UseGuards(JwtAuthGuard)
+  @Get("login")
+  login(@Request() { user }: { user: IJwtPayload }) {
+    return user;
   }
 }

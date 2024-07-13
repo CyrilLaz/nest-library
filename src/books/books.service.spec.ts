@@ -3,26 +3,10 @@ import { BooksService } from "./books.service";
 import { getModelToken } from "@nestjs/mongoose";
 import { Book } from "./schemas/book.schema";
 import { CreateBookDto } from "./dto/create-book.dto";
-import { UpdateBookDto } from "./dto/update-book.dto";
+import { mockBook, mockBookModel } from "src/utils/mocks/book.model";
 
 describe("BooksService", () => {
   let service: BooksService;
-  const mockBook = {
-    _id: "6687edb3c8809cdc8b731710",
-    title: "Над пропастью не ржи",
-  };
-  const mockBookModel = {
-    create: (data: CreateBookDto) => ({ ...mockBook, ...data }),
-    findById: (id: string) => [mockBook].find((e) => e._id === id),
-    find: () => [mockBook],
-    findByIdAndDelete(id: string) {
-      return this.findById(id);
-    },
-    findByIdAndUpdate(id: string, data: UpdateBookDto) {
-      const book = this.findById(id);
-      return { ...book, ...data };
-    },
-  };
 
   beforeEach(async () => {
     const module: TestingModule = await Test.createTestingModule({

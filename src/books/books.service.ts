@@ -10,11 +10,10 @@ export class BooksService {
   constructor(@InjectModel(Book.name) private BookModel: Model<Book>) {}
 
   create(data: CreateBookDto): Promise<TBookDocument> {
-    const book = new this.BookModel(data);
-    return book.save();
+    return this.BookModel.create(data);
   }
   getAll(): Promise<TBookDocument[]> {
-    return this.BookModel.find().exec();
+    return this.BookModel.find();
   }
   update(id: string, data: UpdateBookDto): Promise<TBookDocument> {
     return this.BookModel.findByIdAndUpdate(id, data, {
@@ -28,4 +27,3 @@ export class BooksService {
     return this.BookModel.findByIdAndDelete(id);
   }
 }
-

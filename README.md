@@ -31,6 +31,11 @@ PUT /books/[id]
 DELETE /books/[id]
 ```
 
+## Socket.io события
+
+- `getAllComments` — получает ID книги и возвращает список всех комментариев в ответном событии `getAllComments`;
+- `addComment` — получает текст комментария и сохраняет его.
+
 ## Installation
 
 ```bash

@@ -16,10 +16,9 @@ export class BookCommentGateway {
   @SubscribeMessage("getAllComments")
   handleGetAllComments(
     @MessageBody("bookId") id: string
-  ): Observable<WsResponse<BookComment>> {
+  ): Observable<WsResponse<BookComment[]>> {
     return from(this.bookCommentService.findAllBookComment(id)).pipe(
-      switchMap((comments) => from(comments)),
-      map((comment) => ({ event: "getAllComments", data: comment }))
+      map((comments) => ({ event: "getAllComments", data: comments }))
     );
   }
 
